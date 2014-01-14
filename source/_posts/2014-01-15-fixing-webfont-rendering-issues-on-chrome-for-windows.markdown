@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Fixing webfont rendering issues on Google Chrome"
-date: 2013-10-28 00:29
+title: "Fixing webfont rendering issues on Chrome for Windows"
+date: 2014-01-15 01:57
 comments: true
-categories: 
+categories: [CSS]
 ---
 I've been working with webfonts for a while now in my local machine(with Google Chrome running on Mac). Only recently did I find how horrible the fonts rendered on Google Chrome for Windows.
 

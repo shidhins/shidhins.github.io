@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Shidhin Sarath]]></title>
+  <link href="http://shidhins.github.io/atom.xml" rel="self"/>
+  <link href="http://shidhins.github.io/"/>
+  <updated>2014-03-01T13:58:09+05:30</updated>
+  <id>http://shidhins.github.io/</id>
+  <author>
+    <name><![CDATA[Shidhin Sarath]]></name>
+    <email><![CDATA[shidhins@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Fixing webfont rendering issues on Chrome for Windows]]></title>
+    <link href="http://shidhins.github.io/blog/fixing-webfont-rendering-issues-on-chrome-for-windows/"/>
+    <updated>2014-01-15T01:57:00+05:30</updated>
+    <id>http://shidhins.github.io/blog/fixing-webfont-rendering-issues-on-chrome-for-windows</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been working with webfonts for a while now in my local machine(with Google Chrome running on Mac). Only recently did I find how horrible the fonts rendered on Google Chrome for Windows.</p>
+
+<p>A bit of googling pointed me to <a href="http://dev-metal.com/fix-ugly-font-rendering-google-chrome/">this article</a> that dicusses a few workarounds for the issue. Essentially the idea is to make Chrome load the <em>svg</em> font-file inorder to render correctly. This could be achieved with a webkit specific media query or by changing the font load order and moving <em>svg</em> ahead of <em>woff</em>.</p>
+
+<!--more-->
+
+
+<p>The side effect and downside is that Chrome running on other OSes would also load the <em>svg</em> font-file instead of <em>woff</em>. I wanted to avoid this for performance reasons, since <em>woff</em> offers the best compression and least file size while my <em>svg</em> file was the largest among the lot (three time the size of the <em>woff</em>). Using two webfonts made my case for performance all the more pressing.</p>
+
+<p>So I wanted the heavier <em>svg</em> font files to be loaded only if the browser is Chrome and the OS is Windows. As both the browser and OS have to be detected to serve the right font file, I turned to the <code>User-Agent</code> string sent with the browser request. The server can then apply the appropriate <code>@font-face</code> rule based on the UA.</p>
+
+<p>This is how I did it in Rails:</p>
+
+<figure class='code'><figcaption><span>_assets_preload.html.erb </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;style&gt;</span>
+</span><span class='line'><span class="x">  </span><span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;HTTP_USER_AGENT&#39;</span><span class="o">].</span><span class="n">include?</span> <span class="s2">&quot;Windows&quot;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;HTTP_USER_AGENT&#39;</span><span class="o">].</span><span class="n">include?</span> <span class="s2">&quot;Chrome&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">    @font-face {</span>
+</span><span class='line'><span class="x">      font-family:your-webfont;</span>
+</span><span class='line'><span class="x">      font-style:bold;</span>
+</span><span class='line'><span class="x">      font-weight:normal;</span>
+</span><span class='line'><span class="x">      src:url(&quot;your-webfont.svg&quot;) format(&quot;svg&quot;)</span>
+</span><span class='line'><span class="x">    }</span>
+</span><span class='line'><span class="x">  </span><span class="cp">&lt;%</span> <span class="k">else</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">    @font-face {</span>
+</span><span class='line'><span class="x">      font-family:your-webfont;</span>
+</span><span class='line'><span class="x">      font-weight:normal;</span>
+</span><span class='line'><span class="x">      font-style:normal;</span>
+</span><span class='line'><span class="x">      src:url(&quot;your-webfont.eot&quot;);</span>
+</span><span class='line'><span class="x">      src:url(&quot;your-webfont.eot?#iefix&quot;) format(&quot;embedded-opentype&quot;),</span>
+</span><span class='line'><span class="x">          url(&quot;your-webfont.woff&quot;) format(&quot;woff&quot;),</span>
+</span><span class='line'><span class="x">          url(&quot;your-webfont.ttf&quot;) format(&quot;truetype&quot;),</span>
+</span><span class='line'><span class="x">          url(&quot;your-webfont.svg&quot;) format(&quot;svg&quot;)</span>
+</span><span class='line'><span class="x">    }</span>
+</span><span class='line'><span class="x">  </span><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">&lt;/style&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>@font-face</code> rule has only the <em>svg</em> font file if the request is from Chrome for Windows, while the standard font-face bullet-proof syntax is used in all other cases. The conditional style should be declared before all other application specific styles dependent on the font are loaded. In Rails this would be :</p>
+
+<figure class='code'><figcaption><span>application.html.erb </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">  </span><span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s1">&#39;shared/assets_preload&#39;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">  </span><span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

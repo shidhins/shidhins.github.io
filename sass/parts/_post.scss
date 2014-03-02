@@ -7,9 +7,9 @@
 	}
 	.meta{
 		position: absolute;
-		top: 85px;
+		top: 10px;
 		line-height: 2;
-		font-size: 0.9em;
+		font-size: 0.6em;
 		color: $color-gray02;
 		width: 170px;
 		@media screen and (max-width: 800px){
@@ -24,6 +24,7 @@
 		.date, .tags, .comments{
 			padding-left: 30px;
 			position: relative;
+      font-weight: normal;
 			&:before{
 				color: $color-gray03;
 				font: 1.3em $font-icon;

@@ -1,7 +1,5 @@
 article{
-	border-bottom: 1px solid $color-gray04;
-	border-top: 1px solid $color-gray05;
-	padding: 30px 0;
+	padding: 30px 0 35px;
 	position: relative;
 	@media screen and (max-width: 800px){
 		padding-bottom: 15px;
@@ -10,7 +8,8 @@ article{
 		padding: 15px 0;
 	}
 	h1.title{
-		font-weight: 300;
+    font-size: 1.5em;
+    font-weight: 500;
     line-height: 50px;
     margin-bottom: 20px;
     padding-bottom: 10px;
@@ -29,8 +28,6 @@ article{
 		}
 		.more-link{
 			display: block;
-			margin-top: 16px;
-			padding-left: 30px;
 			position: relative;
 			&:before{
 				// content: "\f061";
@@ -58,17 +55,8 @@ article{
 		p{
 			margin-top: 10px;
 		}
-		h2{
-			font-weight: 300;
-			border-bottom: 1px solid $color-gray04;
-			position: relative;
-			&:before{
-				content: "";
-				position: absolute;
-				bottom: -2px;
-				border-bottom: 1px solid $color-gray05;
-				width: 100%;
-			}
+		h2, h3{
+			font-weight: normal;
 		}
 		img, video{
 			max-width: 100%;
@@ -107,7 +95,7 @@ article{
 		}
 		.caption{
 			display: block;
-			font-size: 0.9em;
+			font-size: 0.5em;
 			color: $color-gray02;
 			padding-left: 25px;
 			position: relative;

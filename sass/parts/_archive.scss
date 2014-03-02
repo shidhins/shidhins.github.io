@@ -12,10 +12,7 @@
 	.year{
 		line-height: 35px;
 		width: 200px;
-		position: absolute;
-		top: 0;
 		padding-top: 15px;
-		border-top: 1px solid #fff;
 		&:before{
 			content: "";
 			position: absolute;
@@ -46,9 +43,10 @@
 		}
 		.meta{
 			color: $color-gray02;
-			font-size: 0.9em;
+			font-size: 0.8em;
 			line-height: 2;
 			margin-top: 0.5em;
+      top: 0;
 			@media screen and (max-width: 600px){
 				display: none;
 			}

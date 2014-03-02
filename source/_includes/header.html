@@ -1,22 +1,11 @@
 <div class="profilepic">
-	{% if site.email_md5 %}
-	<img src="http://www.gravatar.com/avatar/{{ site.email_md5 }}?s=160" alt="Profile Picture" style="width: 160px;" />
-	{% else %}
-	<script src="{{ root_url }}/javascripts/md5.js"></script>
-	<script type="text/javascript">
-		$(function(){
-			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("{{ site.email | downcase }}") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
-		});
-	</script>
-	{% endif %}
+	<img src="/images/background.jpg" alt="Profile Picture" style="width: 130px;height: 130px;" />
 </div>
 
 <div class="sitedesc">
-{% if site.title %}
   <span class="title">
-    <h1 id="title"><a href="{{ root_url }}/">{{ site.title }}</a></h1>
+    <h1 id="title"><a href="{{ root_url }}/">SHIDHIN<strong>SARATH</strong></a></h1>
   </span>
-{% endif %}
 {% if site.subtitle %}
   <span class="subtitle">
     <h2 id="subtitle">{{ site.subtitle }}</h2>
@@ -86,4 +75,3 @@
 </nav>
 
 {% include asides/recent_posts.html %}
-{% include asides/twitter.html %}
